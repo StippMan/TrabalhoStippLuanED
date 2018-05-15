@@ -1,75 +1,81 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "domino.c"
-
-int menu(){
+#include <time.h>
+char a;
+												//arrumando novo_jogo, todos mostrar funfa, da core dump
+int menu(int playing){
 	int op;
-	char a;
-	scanf("%c", &a);
-	system("clear");
 
-		  printf("\n\n**********JOGO DE DOMINO**********");
-		  printf("\n*                                *");
-		  printf("\n*  0. Sair do jogo               *");
-		  printf("\n*  1. Criar pecas do monte       *");
-		  printf("\n*  2. Imprimir peças do monte    *");
-		  printf("\n*  3. Iniciar jogo               *");
-		  printf("\n*  4. Próxima jogada (nfeita)    *");
-		  printf("\n*  5. embaralhar_monte           *");
-		  printf("\n*                                *");
-		  printf("\n**********************************");
+	if(!playing){
+		printf("\n\n**********JOGO DE DOMINO**********");
+		printf("\n*                                *");
+		printf("\n*  0. Sair do jogo               *");
+		printf("\n*  1. criar e mostrar monte      *");
+		printf("\n*  2. Novo jogo                  *"); // sair - novo jogo - criar/mostrar monte
+		printf("\n*                                *");
+		printf("\n**********************************");
 
-		printf("\nSelecione a opção desejada: ");
-		scanf("%i", &op);
-
+	}else{
+		printf("\n/-------------------\\\n");
+		printf("| 0. Sair           |\n");
+		printf("| 1. Proximo turno  |\n");
+		printf("\\-------------------/\n");	
+	}
+	printf("\nSelecione a opção desejada: ");
+	scanf("%i", &op);	
 	return op;
 }
 
 int main(){
-	int op;
-	char a;
-	peca *p, *mesa;
-	p = (peca*)calloc(1,sizeof(peca));
-	//p->prox = NULL;                          //??   calloc ja faz :v
-
+	srand(time(NULL));
+	int hand_size = 7; //temporario?
+	int op, playing = 0;
+	peca *monte, *mesa, *hand;
+	system("clear");
 	printf("\n Pressione enter para começar!");
 	
 	do{
-		op = menu();
-
-		switch(op){
-			case 1:
-				p = criar_monte();
-				printf("\n\n~Monte criado com sucesso!~\n");
-				printf("\nAperte qualquer tecla para continuar... ");
-				scanf("%c", &a);
-			break;
-			
-			case 2:
-				mostrar_monte(p);
-				printf("\nAperte qualquer tecla para continuar... ");
-				scanf("%c", &a);
-			break;
-		
-			case 3:
-				iniciar_jogo(p); // cria a mesa do jogo com a peca 6/6 e a mao do jogador com 7pecas
-				printf("\nAperte qualquer tecla para continuar... ");
-				scanf("%c", &a);
-			break;
-	
-			case 4:
-				
-								
-			break;
-
-			case 5:
-				p = embaralhar_monte(p);				
-				printf("\nAperte qualquer tecla para continuar... ");
-				scanf("%c", &a);
-			break;
+		scanf("%c", &a);
+		system("clear");
+		if(playing){
+			mostrar_monte(monte);
+			mostrar_mesa(mesa);
+			mostrar_hand(hand);
 		}
-		
+		op = menu(playing);
+		if(!playing){
+			switch(op){
+				case 1:
 
+					monte = criar_monte();
+					mesa = criar_mesa(monte);
+					hand = criar_hand(monte);
+					mostrar_monte(monte);
+					mostrar_mesa(mesa);
+					mostrar_hand(hand);
+					printf("Pressione qqr tecla para continuar...\n");
+					scanf("%c", &a);
+				break;
+
+				case 2:
+					playing = novo_jogo(monte, mesa, hand);
+				break;
+			}
+		}else{
+			switch(op){
+				case 1:	
+					hand_size = next_turn(monte, mesa, hand, hand_size);
+				break;
+			}
+		}
+		if(!hand_size){
+			system("clear");
+			mostrar_mesa(mesa);
+			mostrar_hand(hand);
+			printf("JOGO FINALIZADO!\n");
+			return 0;	
+		}
 	}while(op!=0);
 	return 0;
 }
