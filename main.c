@@ -54,12 +54,14 @@ int main(){
 					mostrar_monte(monte);
 					mostrar_mesa(mesa);
 					mostrar_hand(hand);
-					printf("Pressione qqr tecla para continuar...\n");
+					printf("\nPressione qqr tecla para continuar...\n");
 					scanf("%c", &a);
 				break;
 
 				case 2:
+
 					playing = novo_jogo(monte, mesa, hand);
+
 				break;
 			}
 		}else{

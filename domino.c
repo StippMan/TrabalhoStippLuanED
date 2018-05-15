@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h>	
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
@@ -32,7 +32,7 @@ peca* criar_hand(peca* monte){ //cria a lista da mão
 	return hand;
 }
 //************************************************************************
-peca* criar_monte(){ //cria as pecas do monte e depois as embaralha                                        //sem bug
+peca* criar_monte(){ //cria as pecas do monte e depois as embaralha                             
 	peca* monte = (peca*)calloc(1,sizeof(peca));
 	peca* aux = monte;
 	for(int i=0; i <= 6; i++){      
@@ -212,7 +212,7 @@ int check(peca* hand, peca* mesa){
 	while(aux != NULL){
 		if ((aux->left == mesa->pred->left || aux->right == mesa->prox->right) && aux->left != aux->right) {
 		swap(aux);	//se estiver trocado
-		printf("[%d|%d] inverte para [%d|%d]\n", aux->right, aux->left, aux->left, aux->right);
+		printf("[%d|%d] inverte para [%d|%d]\n", aux->right, aux->left, aux->left, aux->right);	
 		}
 		if (aux->right == mesa->pred->left || aux->left == mesa->prox->right)	return position; 		//se encaixar no começo
 		position++;
@@ -236,7 +236,8 @@ int next_turn(peca* monte, peca* mesa, peca* hand, int hand_size){
 			aux = desenfileirar(monte);
 			inserir_inicio(hand, aux);
 			printf("peca comprada: [%d|%d]\n", aux->left, aux->right);
-			scanf("%c", &a);
+			printf("\nPressione 1 para continuar: ");
+			scanf(" %c", &a);
 			hand_size++;
 			ck = check(hand, mesa);
 		}
