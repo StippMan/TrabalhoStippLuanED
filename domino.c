@@ -1,7 +1,6 @@
 #include <stdio.h>	
 #include <stdlib.h>
 #include <time.h>
-#include <stdbool.h>
 #include "domino.h"
 
 char a;
@@ -67,11 +66,11 @@ peca* criar_mesa(peca *monte){ //cria a lista da mesa com a peca |6|6| já prese
 void mostrar_monte(peca *monte){
 	peca *aux = monte->pred;	//aux aponta para o primeiro
 	int i=0;
+	printf("\n**********PEÇAS DO MONTE**********\n\n");
 	if(aux == NULL){
-		printf("\nErro, monte vazio, por favor, crie o monte antes de selecionar esta opção.");
+		printf("\nMonte vazio\n");
 		return;
 	}
-	printf("\n**********PEÇAS DO MONTE**********\n\n");
 
 	while (aux != NULL){
 		
@@ -145,11 +144,16 @@ peca* embaralhar_monte(peca* monte_in){																	//ok
 }
 //************************************************************************
 peca* desenfileirar(peca *fila){ //a peca desenfileirada tem prox e pred = NULL
-	peca* aux = fila->pred;
+	peca* aux = fila->pred;		//aux aponta para o primeiro
 	if(aux == NULL)	return NULL;
-
-	fila->pred = aux->prox;
-	aux->prox->pred = NULL;
+	if(aux->prox != NULL){
+		fila->pred = aux->prox;
+		aux->prox->pred = NULL;
+	}
+	else{
+		fila->pred = NULL;
+		fila->prox = NULL;
+	}
 	aux->prox = NULL;					//"cortando ligaçoes"
 	aux->pred = NULL;
 	return aux;
@@ -234,12 +238,21 @@ int next_turn(peca* monte, peca* mesa, peca* hand, int hand_size){
 	if(ck < 0){
 		while(ck < 0){
 			aux = desenfileirar(monte);
-			inserir_inicio(hand, aux);
-			printf("peca comprada: [%d|%d]\n", aux->left, aux->right);
-			printf("\nPressione 1 para continuar: ");
-			scanf(" %c", &a);
-			hand_size++;
-			ck = check(hand, mesa);
+			if(aux != NULL){
+				inserir_inicio(hand, aux);
+				printf("peca comprada: [%d|%d]\n", aux->left, aux->right);
+				printf("\nPressione 1 para continuar: ");
+				scanf(" %c", &a);
+				hand_size++;
+				ck = check(hand, mesa);
+			}else{
+				ck = check(hand, mesa);
+				if (ck == -1){
+					printf("\n>>>>>GAME OVER>>>>> Não há mais jogadas possíveis\n");
+					scanf("%c", &a);
+					return 0;
+				}
+			}
 		}
 
 	}
@@ -258,8 +271,14 @@ int next_turn(peca* monte, peca* mesa, peca* hand, int hand_size){
 }
 //************************************************************************
 int novo_jogo(peca* monte, peca* mesa, peca* hand){ //inicializa o jogo
-
-	printf("JOGO INICIADO!\n");
-	scanf("%c", &a);
-	return 1;
+	if(monte == NULL){
+		printf("Monte vazio! Crie-o primeiro\n");
+		scanf("%c", &a);
+		return 0;
+	}
+	else{
+		printf("JOGO INICIADO!\n");
+		scanf("%c", &a);
+		return 1;
+	}
 }

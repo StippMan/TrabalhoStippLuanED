@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "domino.c"
+//#include "domino.c"
+#include "domino.h"
 #include <time.h>
 char a;
 												//arrumando novo_jogo, todos mostrar funfa, da core dump
@@ -31,7 +32,7 @@ int main(){
 	srand(time(NULL));
 	int hand_size = 7; //temporario?
 	int op, playing = 0;
-	peca *monte, *mesa, *hand;
+	peca *monte = NULL, *mesa, *hand;
 	system("clear");
 	printf("\n Pressione enter para começar!");
 	
@@ -72,10 +73,11 @@ int main(){
 			}
 		}
 		if(!hand_size){
+			scanf("%c", &a);
 			system("clear");
 			mostrar_mesa(mesa);
 			mostrar_hand(hand);
-			printf("JOGO FINALIZADO!\n");
+			printf(">>>>>>>>>>>>>>>>>>>>JOGO FINALIZADO!<<<<<<<<<<<<<<<<<<<<\n");
 			return 0;	
 		}
 	}while(op!=0);
